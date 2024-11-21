@@ -4,7 +4,7 @@
 ``` javascript
 const Ratehtml = renderToStaticMarkup(
 	<Rate
-	 value={1}
+	 count={1}
 	/>
 );
   InfoWindowRef.setContent(`<div>infowindow的标题${Ratehtml}</div>`)
