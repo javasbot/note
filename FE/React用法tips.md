@@ -1,4 +1,4 @@
-1. react-server相关API的妙用
+1. react-server相关API的使用
 
 > 有的需求需要把React组件渲染成html DOM的字符串，比如高德地图的InfoWindow的content支持HTML要素字符串或者HTMLElement对象，将组件antd的Rate渲染成HTML字符串，可以使用[renderToStaticMarkup](https://zh-hans.react.dev/reference/react-dom/server/renderToStaticMarkup)
 
@@ -9,6 +9,29 @@ const Ratehtml = renderToStaticMarkup(
 	/>
 );
   InfoWindowRef.setContent(`<div>infowindow的标题${Ratehtml}</div>`)
+```
+
+但是react官网[不建议在客户端代码这样做](https://zh-hans.react.dev/reference/react-dom/server/renderToString#removing-rendertostring-from-the-client-code)，改成
+
+```javascript
+const getRatehtml = useCallback((params) => {
+		const div = document.createElement('div');
+		const root = createRoot(div);
+		flushSync(() => {
+			root.render(
+				<Rate
+					character={() => (
+						<img
+							src=""
+							className=""
+{...params}
+						/>
+					)}
+				/>
+			);
+		});
+		return div.innerHTML;
+	}, []);
 ```
 
 2. useContext的渲染优化
