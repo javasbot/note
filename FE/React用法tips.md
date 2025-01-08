@@ -42,3 +42,7 @@ const getRatehtml = useCallback((params) => {
 - 拆分组件为两层
   [见代码](https://segmentfault.com/q/1010000044248290/a-1020000045496543)
 
+3. 如何量化react的优化效果
+   使用 `Profiler`可以检测组件使用useMemo、useCallback、memo后的变化
+  
+
