@@ -44,5 +44,6 @@ const getRatehtml = useCallback((params) => {
 
 3. 如何量化react的优化效果
    使用 `Profiler`可以检测组件使用useMemo、useCallback、memo后的变化
-  
+![企业微信截图_65863e6e-c878-406b-b9fe-3dd4e745ee78](https://github.com/user-attachments/assets/d2c4dabe-be89-43c2-a87d-2c10e9861d4c)
+
 
