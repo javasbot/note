@@ -1,0 +1,79 @@
+1. 闭包场景下使用useCallback的dep还是用useRef缓存呢？
+- 使用useCallback的dep频繁重建函数
+```
+onclose() {
+				console.log('连接关闭');
+				// MessageArr内元素已全部入队
+				smartChatStore.setAnsResStatus('end');
+			}
+		});
+	};
+
+	// 当chatStatus的状态变化提交给react commit阶段执行完成后，即此时的chatList已经是最新的，再调用关联问题接口
+	useEffect(() => {
+		if (chatStatus === 'end') {
+			relatedQuestion();
+		}
+	}, [chatStatus]);
+
+	// 关联问题，当chatList更新时重建此函数，确保拿到最新的chatList
+	const relatedQuestion = useCallback(async () => {
+		const payload = { type: 3, questionId: smartChatStore.curQid };
+		const res = await answerRelatedQuestionUrl(payload);
+		if (res.suc && Array.isArray(res.data)) {
+			const newChatList = [
+				...chatList,
+				{
+					type: 'relatedIssues',
+					qid: `${smartChatStore.curQid}-related`,
+					content: res.data
+				}
+			];
+			dispatch({
+				chatList: newChatList
+			});
+		}
+	}, [chatList]);
+
+```
+可以发现，频繁的函数重建会导致频繁的组件重新渲染。
+- 使用useRef缓存chatList
+```
+useEffect(() => {
+		chatListRef.current = chatList;
+	}, [chatList]);
+
+  useEffect(() => {
+		curQidRef.current = curQid;
+	}, [curQid]);
+	useEffect(() => {
+		if (chatStatus === 'end') {
+			relatedQuestion();
+		}
+	}, [chatStatus]);
+
+	const relatedQuestion = async () => {
+		const payload = { type: 3, questionId: curQidRef.current };
+		const res = await answerRelatedQuestionUrl(payload);
+		if (res.suc && Array.isArray(res.data)) {
+			const newChatList = [
+				...chatListRef.current,
+				{
+					type: 'relatedIssues',
+					qid: `${curQidRef.current}-related`,
+					content: res.data
+				}
+			];
+			dispatch({
+				chatList: newChatList
+			});
+		}
+	};
+// <Profiler
+					// 	id="QuestionAnswerCom"
+					// 	onRender={(...rest) => {
+					// 		console.log('实际渲染毫秒数', rest[2], '估算无优化时毫秒数', rest[3]);
+					// 	}}
+					// >
+```
+> 综合对比，还是使用useRef缓存state在update阶段的渲染性能更好
