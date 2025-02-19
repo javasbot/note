@@ -5,3 +5,6 @@
 			// 	top: div.scrollHeight - div.clientHeight,
 			// 	behavior: 'smooth'
 			// }); ``` 和`scrollIntoView`一样，如果内容是异步获取的话，有时候不会滚动最底部
+
+### Web API相关
+ResizeObserver监听的父元素包含图片子元素时，如果图片子元素没有设置固定高度，图片子元素渲染出来后(onload)导致父元素高度变化时可能不会触发ResizeObserver的回调
