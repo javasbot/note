@@ -1,0 +1,24 @@
+// 资源服务器支持CORS（推荐）
+async function downloadCrossOriginFile(url, filename) {
+  try {
+    const response = await fetch(url, { mode: 'cors' });
+    if (!response.ok) throw new Error('Network response was not ok.');
+    const blob = await response.blob();
+    const objectUrl = window.URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = objectUrl;
+    link.download = filename || 'downloaded-file'; // 设置默认文件名
+    document.body.appendChild(link);
+    link.click();
+    
+    // 清理资源
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(objectUrl);
+  } catch (error) {
+    console.error('Download failed:', error);
+  }
+}
+
+// 使用示例
+downloadCrossOriginFile('https://其他域名.com/file.pdf', 'my-file.pdf');
