@@ -46,4 +46,22 @@ const getRatehtml = useCallback((params) => {
    使用 `Profiler`可以检测组件使用useMemo、useCallback、memo后的变化
 ![企业微信截图_65863e6e-c878-406b-b9fe-3dd4e745ee78](https://github.com/user-attachments/assets/d2c4dabe-be89-43c2-a87d-2c10e9861d4c)
 
+4. React错误处理
+> 方法1: [error boundary](https://zh-hans.react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary)
+> 方法2 react-router-dom的useRouteError
+```
+import type { FC } from "react";
+
+import { useRouteError } from "react-router-dom";
+
+const ErrorBoundary: FC = () => {
+  const occurredByRoute = useRouteError();
+
+  return <>{(occurredByRoute as { message: string }).message}</>;
+};
+
+export default ErrorBoundary;
+
+```
+
 
